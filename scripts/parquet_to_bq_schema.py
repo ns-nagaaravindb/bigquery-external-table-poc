@@ -77,7 +77,7 @@ class BigQuerySchemaGenerator:
             return 'FLOAT'
         elif pa.types.is_boolean(arrow_type):
             return 'BOOLEAN'
-        elif pa.types.is_string(arrow_type) or pa.types.is_utf8(arrow_type):
+        elif pa.types.is_string(arrow_type) or pa.types.is_unicode(arrow_type):
             return 'STRING'
         elif pa.types.is_binary(arrow_type):
             return 'BYTES'
@@ -234,7 +234,8 @@ def generate_bigquery_schema_from_parquet(parquet_file: str, table_name: str = "
 
 if __name__ == "__main__":
     ddl_statement, column_tuples = generate_bigquery_schema_from_parquet(
-        "/Users/nagaaravindb/rs/bigquery-external-table-poc/data/sample_data_problematic.parquet"
+        # "/Users/nagaaravindb/rs/bigquery-external-table-poc/data/sample_data_problematic.parquet"
+        "../data/nspolicy.parquet"
     )
 
     # Print the return values
