@@ -1,0 +1,35 @@
+services:
+  bigquery-emulator:
+    image: ghcr.io/goccy/bigquery-emulator:latest
+    platform: linux/amd64
+    ports:
+      - "9050:9050"
+      - "9060:9060"
+    environment:
+      - PROJECT_ID=test-project
+      - DATASET_ID=test_dataset
+    volumes:
+      - ./data:/data
+    command: [
+      "--project", "test-project",
+      "--dataset", "test_dataset",
+      "--port", "9050",
+      "--grpc-port", "9060",
+      "--log-level", "info"
+    ]
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:9060/bigquery/v2/projects/test-project/datasets"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 40s
+
+  # simple file server to serve parquet files
+  file-server:
+    image: nginx:alpine
+    ports:
+      - "8080:80"
+    volumes:
+      - ./data:/usr/share/nginx/html/data
+    environment:
+      - NGINX_PORT=80
